@@ -1,0 +1,20 @@
+{
+  "Home": {
+    "welcome_message": "Welcome to RandomChat",
+    "description": "Connect with strangers from around the world in just one click!",
+    "start_chatting": "Start Chatting",
+    "instant_connections": "Instant Connections",
+    "safe_secure": "Safe & Secure",
+    "fun_conversations": "Fun Conversations"
+  },
+
+  "Footer": {
+    "footer": "© 2024 RandomChat. All rights reserved."
+  },
+  "404": {
+    "title": "Oops! Page Not Found",
+    "description": "It seems like the page you're trying to reach doesn't exist. You can return home or start a new chat.",
+    "go_home": "Go Home",
+    "start_chatting": "Start Chatting"
+  }
+}
