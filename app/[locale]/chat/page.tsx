@@ -1,42 +1,23 @@
-"use client";
-
 import ChatHeader from "@/components/chat/ChatHeader";
 import MessageInput from "@/components/chat/MessageInput";
 import MessageList from "@/components/chat/MessageList";
-import { useState } from "react";
-
-interface Message {
-  id: number;
-  text: string;
-  sender: "user" | "stranger";
-}
+import { redirect } from "@/i18n/routing";
+import { cookies } from "next/headers";
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: "Hi there! How are you?", sender: "stranger" },
-    {
-      id: 2,
-      text: "I'm doing well, thanks for asking! How about you?",
-      sender: "user",
-    },
-  ]);
+  const userCookie = cookies().get("_SS");
+  if (!userCookie?.value) {
+    redirect("/login");
+    return null;
+  }
 
-  const handleSendMessage = (text: string) => {
-    if (text.trim()) {
-      const newMessage: Message = {
-        id: messages.length + 1,
-        text: text,
-        sender: "user",
-      };
-      setMessages([...messages, newMessage]);
-    }
-  };
+  const roomId = "11233";
 
   return (
     <div className="flex flex-col h-dvh bg-gray-100">
-      <ChatHeader />
-      <MessageList messages={messages} />
-      <MessageInput onSendMessage={handleSendMessage} />
+      <ChatHeader currentUser={userCookie?.value} />
+      <MessageList currentUser={userCookie?.value} roomId={roomId} />
+      <MessageInput currentUser={userCookie?.value} roomId={roomId} />
     </div>
   );
 }

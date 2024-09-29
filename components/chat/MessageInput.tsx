@@ -1,18 +1,19 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useMessages } from "@/db/useMessages";
+import { ChatProps } from "@/lib/types";
 import { Send } from "lucide-react";
 import { SetStateAction, useState } from "react";
 
-interface MessageInputProps {
-  onSendMessage: (message: string) => void;
-}
-
-export default function MessageInput({ onSendMessage }: MessageInputProps) {
+export default function MessageInput({ currentUser, roomId }: ChatProps) {
   const [inputMessage, setInputMessage] = useState("");
+  const { sendMessage } = useMessages(roomId);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSendMessage(inputMessage);
+    sendMessage(inputMessage, currentUser);
     setInputMessage("");
   };
 

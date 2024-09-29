@@ -16,5 +16,13 @@
     "description": "It seems like the page you're trying to reach doesn't exist. You can return home or start a new chat.",
     "go_home": "Go Home",
     "start_chatting": "Start Chatting"
+  },
+  "Login": {
+    "title": "Join Chat Stranger",
+    "description": "Enter as a guest to start chatting",
+    "nickname_label": "Nickname",
+    "nickname_placeholder": "Enter your nickname",
+    "submit_button": "Start Chatting",
+    "submitting": "Submitting..."
   }
 }

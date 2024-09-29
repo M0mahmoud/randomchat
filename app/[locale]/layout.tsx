@@ -25,7 +25,10 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      className={locale === "ar" ? "*:text-right" : "*:text-left"}
+    >
       <body
         suppressHydrationWarning
         className={`${tajawal.className} antialiased`}
