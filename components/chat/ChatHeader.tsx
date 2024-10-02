@@ -5,16 +5,16 @@ import { Link } from "@/i18n/routing";
 import { ArrowLeft, User } from "lucide-react";
 import { Button } from "../ui/button";
 
-export default function ChatHeader({ currentUser }: { currentUser: string }) {
-  const onlineUsers = useOnlinePresence(currentUser);
+export default function ChatHeader({ uid }: { uid: string }) {
+  const onlineUsers = useOnlinePresence(uid);
 
   return (
     <header className="bg-white shadow-sm p-4 flex items-center justify-between">
-      <Button role="link" variant="secondary">
-        <Link href="/">
+      <Link href="/">
+        <Button role="link" variant="secondary">
           <ArrowLeft className="h-6 w-6 text-gray-600" />
-        </Link>
-      </Button>
+        </Button>
+      </Link>
       {/*TODO: For Now */}
       <div className="gap-1 flex items-center">
         <span>{onlineUsers.length}</span>

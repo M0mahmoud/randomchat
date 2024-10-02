@@ -21,9 +21,15 @@ export default async function Home() {
         </p>
         <Link
           href="/chat"
+          className="text-lg px-6 py-3 bg-primary text-primary-foreground flex items-center w-fit rounded-lg mx-auto mb-4"
+        >
+          Global Chat <ArrowRight className="ms-2 h-5 w-5" />
+        </Link>
+        <Link
+          href="/random"
           className="text-lg px-6 py-3 bg-primary text-primary-foreground flex items-center w-fit rounded-lg mx-auto"
         >
-          {t("start_chatting")} <ArrowRight className="ms-2 h-5 w-5" />
+          Random Chat <ArrowRight className="ms-2 h-5 w-5" />
         </Link>
         <div className="mt-12 flex justify-center gap-12">
           <div className="flex flex-col items-center">
