@@ -5,7 +5,7 @@ import { useMessages } from "@/db/useMessages";
 import { useOnlinePresence } from "@/db/useOnlinePresence";
 import { Link } from "@/i18n/routing";
 import { ChatProps } from "@/lib/types";
-import { format } from "date-fns";
+import { cn, timeFormat } from "@/lib/utils";
 import { UserPlus } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -31,19 +31,28 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
           return (
             <div
               key={`${message.timestamp}-${index}`}
-              className={`flex ${
+              className={cn(
+                "flex",
                 isCurrentUser ? "justify-end" : "justify-start"
-              }`}
+              )}
             >
               <div
-                className={`flex ${
+                className={cn(
+                  "flex items-end gap-2 ",
                   isCurrentUser ? "flex-row-reverse" : "flex-row"
-                } items-end gap-2`}
+                )}
               >
                 {!isCurrentUser && (
                   <Popover key={`${message.timestamp}-${index}`}>
                     <PopoverTrigger asChild>
-                      <Avatar className="w-8 h-8 cursor-pointer">
+                      <Avatar className="w-8 h-8 cursor-pointer relative overflow-visible">
+                        <span
+                          className={cn(
+                            "w-2 h-2  rounded-full ml-1 absolute -top-1 -translate-x-1/2 z-10",
+                            isOnline ? "bg-green-500" : "bg-red-500"
+                          )}
+                          aria-label={isOnline ? "Online" : "Offline"}
+                        />
                         <AvatarImage
                           src={`https://api.dicebear.com/9.x/fun-emoji/svg?seed=${message.sender}&radius=50`}
                         />
@@ -64,6 +73,13 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
                         </Avatar>
                         <h3 className="font-semibold">{message.sender}</h3>
                         <p className="text-sm text-gray-500 mb-2">
+                          <span
+                            className={cn(
+                              "w-2 h-2  rounded-full me-1 inline-block",
+                              isOnline ? "bg-green-500" : "bg-red-500"
+                            )}
+                            aria-label={isOnline ? "Online" : "Offline"}
+                          />
                           {isOnline ? "Online" : "Offline"}
                         </p>
                         <div className="flex items-center gap-1">
@@ -81,26 +97,21 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
                   </Popover>
                 )}
                 <div
-                  className={`relative max-w-xs md:max-w-md px-3 py-2 rounded-lg ${
+                  className={cn(
+                    "relative max-w-xs md:max-w-md px-3 py-2 rounded-lg",
                     isCurrentUser
                       ? "bg-blue-500 text-white"
                       : "bg-white text-gray-800"
-                  }`}
+                  )}
                 >
-                  <span
-                    className={`w-2 h-2  rounded-full ml-2 absolute -top-1 -translate-x-1/2 animate-ping
-                        ${isCurrentUser ? "-right-1" : "-left-1"}
-                        ${isOnline ? "bg-green-500" : "bg-red-500"}
-                      `}
-                    aria-label={isOnline ? "Online" : "Offline"}
-                  />
                   <p className="text-base">{message.text}</p>
                   <p
-                    className={`text-xs mt-1 ${
+                    className={cn(
+                      "text-xs mt-0",
                       isCurrentUser ? "text-blue-200" : "text-gray-500"
-                    }`}
+                    )}
                   >
-                    {format(new Date(message.timestamp), "hh:mm ")}
+                    {timeFormat(new Date(message.timestamp))}
                   </p>
                 </div>
               </div>
