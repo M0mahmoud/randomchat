@@ -23,6 +23,7 @@ export default function MessageInput({ currentUser, roomId }: ChatProps) {
         <Input
           type="text"
           placeholder="Type a message..."
+          required
           value={inputMessage}
           onChange={(e: { target: { value: SetStateAction<string> } }) =>
             setInputMessage(e.target.value)
