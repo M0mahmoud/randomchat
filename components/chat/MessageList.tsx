@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 export default function MessageList({ currentUser, roomId }: ChatProps) {
   const endRef = useRef<HTMLDivElement | null>(null);
-  const onlineUsers = useOnlinePresence(currentUser);
+  const onlineUsers = useOnlinePresence(currentUser?.uid!);
   const { messages } = useMessages(roomId);
 
   useEffect(() => {
@@ -25,8 +25,8 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
     <ScrollArea className="flex-grow p-4">
       <div className="space-y-4">
         {messages.map((message, index) => {
-          const isCurrentUser = message.sender === currentUser;
-          const isOnline = onlineUsers.includes(message.sender);
+          const isCurrentUser = message.sender === currentUser?.displayName;
+          const isOnline = onlineUsers.includes(message.senderUid);
 
           return (
             <div

@@ -93,9 +93,34 @@ export default function RandomChat() {
     setIsLoading(false);
   }, [currentUser]);
 
+  const onLeaveChat = () => {
+    setRoomId(null);
+    set(ref(database, `users/${currentUser?.displayName}/roomId`), null);
+    remove(ref(database, `waiting_users/${currentUser?.displayName}`));
+
+    if (roomId) {
+      const roomRef = ref(database, `private_chats/${roomId}`);
+      get(roomRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const roomData = snapshot.val();
+          const otherUser = roomData.users.find(
+            (user: string) => user !== currentUser?.displayName
+          );
+          if (otherUser) {
+            set(ref(database, `users/${otherUser}/roomId`), null);
+          }
+          // Remove the chat room
+          remove(roomRef);
+        }
+      });
+    }
+
+    router.refresh();
+  };
+
   return (
     <div className="flex flex-col h-dvh bg-gray-100">
-      <ChatHeader uid={currentUser?.uid || "Anonymous"} />
+      <ChatHeader uid={currentUser?.uid!} />
       {isLoading ? (
         <Loading />
       ) : (
@@ -103,12 +128,13 @@ export default function RandomChat() {
           {roomId ? (
             <>
               <MessageList
-                currentUser={currentUser?.displayName || "Anonymous"}
+                currentUser={currentUser}
                 roomId={roomId}
               />
               <MessageInput
-                currentUser={currentUser?.displayName || "Anonymous"}
+                currentUser={currentUser}
                 roomId={roomId}
+                onLeaveChat={onLeaveChat}
               />
             </>
           ) : (

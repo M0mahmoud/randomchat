@@ -12,6 +12,7 @@ export function useMessages(roomId: string) {
     const messagesRef = ref(rtdb, `rooms/${roomId}/messages`);
     const unsubscribe = onChildAdded(messagesRef, (snapshot: DataSnapshot) => {
       const message = snapshot.val();
+      console.log("message", message);
       setMessages((prevMessages) => [
         ...prevMessages,
         { ...message, id: snapshot.key as string },
@@ -21,11 +22,12 @@ export function useMessages(roomId: string) {
     return () => unsubscribe();
   }, [roomId]);
 
-  const sendMessage = (text: string, sender: string) => {
+  const sendMessage = (text: string, sender: string, senderUid: string) => {
     const messagesRef = ref(rtdb, `rooms/${roomId}/messages`);
     push(messagesRef, {
       text,
       sender,
+      senderUid,
       timestamp: Date.now(),
     });
   };

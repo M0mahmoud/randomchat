@@ -4,22 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMessages } from "@/db/useMessages";
 import { ChatProps } from "@/lib/types";
-import { Send } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { SetStateAction, useState } from "react";
 
-export default function MessageInput({ currentUser, roomId }: ChatProps) {
+export default function MessageInput({
+  currentUser,
+  roomId,
+  onLeaveChat,
+}: ChatProps) {
   const [inputMessage, setInputMessage] = useState("");
   const { sendMessage } = useMessages(roomId);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    sendMessage(inputMessage, currentUser);
+    sendMessage(inputMessage, currentUser?.displayName!, currentUser?.uid!);
     setInputMessage("");
   };
 
   return (
     <div className="p-4 bg-white">
       <form onSubmit={handleSubmit} className="flex space-x-2">
+        <Button onClick={onLeaveChat} variant="ghost" type="button">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Leave Chat</span>
+        </Button>
         <Input
           type="text"
           placeholder="Type a message..."
