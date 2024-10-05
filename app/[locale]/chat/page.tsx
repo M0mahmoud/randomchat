@@ -29,18 +29,19 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-dvh bg-gray-100">
-      <ChatHeader uid={currentUser?.uid || "Anonymous"} />
+      <ChatHeader uid={currentUser?.uid!} />
       {isLoading ? (
         <Loading />
       ) : (
         <>
           <MessageList
-            currentUser={currentUser?.displayName || "Anonymous"}
+            currentUser={currentUser}
             roomId={roomId}
           />
           <MessageInput
-            currentUser={currentUser?.displayName || "Anonymous"}
+            currentUser={currentUser}
             roomId={roomId}
+            isPublic={true}
           />
         </>
       )}

@@ -11,6 +11,7 @@ export default function MessageInput({
   currentUser,
   roomId,
   onLeaveChat,
+  isPublic,
 }: ChatProps) {
   const [inputMessage, setInputMessage] = useState("");
   const { sendMessage } = useMessages(roomId);
@@ -24,10 +25,12 @@ export default function MessageInput({
   return (
     <div className="p-4 bg-white">
       <form onSubmit={handleSubmit} className="flex space-x-2">
-        <Button onClick={onLeaveChat} variant="ghost" type="button">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Leave Chat</span>
-        </Button>
+        {!isPublic && (
+          <Button onClick={onLeaveChat} variant="ghost" type="button">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Leave Chat</span>
+          </Button>
+        )}
         <Input
           type="text"
           placeholder="Type a message..."

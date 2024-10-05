@@ -135,6 +135,7 @@ export default function RandomChat() {
                 currentUser={currentUser}
                 roomId={roomId}
                 onLeaveChat={onLeaveChat}
+                isPublic={false}
               />
             </>
           ) : (

@@ -12,7 +12,7 @@ export function useMessages(roomId: string) {
     const messagesRef = ref(rtdb, `rooms/${roomId}/messages`);
     const unsubscribe = onChildAdded(messagesRef, (snapshot: DataSnapshot) => {
       const message = snapshot.val();
-      console.log("message", message);
+      
       setMessages((prevMessages) => [
         ...prevMessages,
         { ...message, id: snapshot.key as string },

@@ -11,15 +11,25 @@ import { useEffect, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import useSound from 'use-sound';
 
 export default function MessageList({ currentUser, roomId }: ChatProps) {
   const endRef = useRef<HTMLDivElement | null>(null);
   const onlineUsers = useOnlinePresence(currentUser?.uid!);
   const { messages } = useMessages(roomId);
+  
+  const [playMessageSound] = useSound('/msgSound.mp3', {
+    volume:0.5
+  });
 
   useEffect(() => {
     endRef?.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length]);
+    
+    // Play sound when a new message is received
+    if (messages.length > 0 && messages[messages.length - 1].sender !== currentUser?.displayName) {
+      playMessageSound();
+    }
+  }, [messages]);
 
   return (
     <ScrollArea className="flex-grow p-4">
