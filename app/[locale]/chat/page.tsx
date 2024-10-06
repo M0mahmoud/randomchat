@@ -4,44 +4,36 @@ import ChatHeader from "@/components/chat/ChatHeader";
 import MessageInput from "@/components/chat/MessageInput";
 import MessageList from "@/components/chat/MessageList";
 import Loading from "@/components/Loading";
-import { auth } from "@/db/firebase";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "@/i18n/routing";
-import { onAuthStateChanged, User } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 export default function ChatPage() {
   const roomId = "Global";
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, loading } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    const unSub = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        router.push("/login");
-      }
-    });
-    setIsLoading(false);
-    return () => unSub();
-  }, [router]);
+  if (loading) return <Loading />;
+  if (!user) return router.push("/login");
 
   return (
     <div className="flex flex-col h-dvh bg-gray-100">
-      <ChatHeader uid={currentUser?.uid! || "Guest"} />
-      {isLoading ? (
+      <ChatHeader uid={user.uid} />
+      {loading ? (
         <Loading />
       ) : (
         <>
           <MessageList
-            currentUser={currentUser}
-            roomId={roomId}
-          />
-          <MessageInput
-            currentUser={currentUser}
+            currentUser={user}
             roomId={roomId}
             isPublic={true}
+            isPrivateChat={false}
+          />
+          <MessageInput
+            currentUser={user}
+            roomId={roomId}
+            isPublic={true}
+            isPrivateChat={false}
           />
         </>
       )}

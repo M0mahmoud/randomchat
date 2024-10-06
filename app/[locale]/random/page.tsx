@@ -4,34 +4,23 @@ import ChatHeader from "@/components/chat/ChatHeader";
 import MessageInput from "@/components/chat/MessageInput";
 import MessageList from "@/components/chat/MessageList";
 import Loading from "@/components/Loading";
-import { auth, rtdb as database } from "@/db/firebase";
+import { rtdb as database } from "@/db/firebase";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "@/i18n/routing";
-import { onAuthStateChanged, User } from "firebase/auth";
 
 import { get, onValue, push, ref, remove, set } from "firebase/database";
 import React, { useEffect, useState } from "react";
 
 export default function RandomChat() {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, loading } = useAuth();
   const [roomId, setRoomId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  useEffect(() => {
-    const unSub = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        router.push("/login");
-      }
-    });
-
-    return () => unSub();
-  }, [router]);
 
   useEffect(() => {
-    if (currentUser?.displayName) {
+    if (user?.displayName) {
       setIsLoading(true);
-      const { displayName } = currentUser;
+      const { displayName } = user;
       console.log(`displayName:`, displayName);
 
       const userRoomRef = ref(database, `users/${displayName}/roomId`);
@@ -91,12 +80,15 @@ export default function RandomChat() {
       });
     }
     setIsLoading(false);
-  }, [currentUser]);
+  }, [user]);
+
+  if (loading) return <Loading />;
+  if (!user) return router.push("/login");
 
   const onLeaveChat = () => {
     setRoomId(null);
-    set(ref(database, `users/${currentUser?.displayName}/roomId`), null);
-    remove(ref(database, `waiting_users/${currentUser?.displayName}`));
+    set(ref(database, `users/${user?.displayName}/roomId`), null);
+    remove(ref(database, `waiting_users/${user?.displayName}`));
 
     if (roomId) {
       const roomRef = ref(database, `private_chats/${roomId}`);
@@ -104,7 +96,7 @@ export default function RandomChat() {
         if (snapshot.exists()) {
           const roomData = snapshot.val();
           const otherUser = roomData.users.find(
-            (user: string) => user !== currentUser?.displayName
+            (userData: string) => userData !== user?.displayName
           );
           if (otherUser) {
             set(ref(database, `users/${otherUser}/roomId`), null);
@@ -120,7 +112,7 @@ export default function RandomChat() {
 
   return (
     <div className="flex flex-col h-dvh bg-gray-100">
-      <ChatHeader uid={currentUser?.uid! || "Guest"} />
+      <ChatHeader uid={user?.uid || "Guest"} />
       {isLoading ? (
         <Loading />
       ) : (
@@ -128,14 +120,17 @@ export default function RandomChat() {
           {roomId ? (
             <>
               <MessageList
-                currentUser={currentUser}
+                currentUser={user}
                 roomId={roomId}
+                isPublic={false}
+                isPrivateChat={true}
               />
               <MessageInput
-                currentUser={currentUser}
+                currentUser={user}
                 roomId={roomId}
                 onLeaveChat={onLeaveChat}
                 isPublic={false}
+                isPrivateChat={false}
               />
             </>
           ) : (

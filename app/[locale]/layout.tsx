@@ -64,7 +64,6 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
-  manifest: "/site.webmanifest",
 };
 
 export default async function RootLayout({
@@ -77,23 +76,13 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html
-      lang={locale}
-      className={locale === "ar" ? "*:text-right" : "*:text-left"}
-    >
-      <body
-        suppressHydrationWarning
-        className={`${tajawal.className} antialiased`}
-      >
-        <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem
-        >
+    <html lang={locale}>
+      <body suppressHydrationWarning className={tajawal.className}>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+            {children}
+          </ThemeProvider>
         </NextIntlClientProvider>
-        </ThemeProvider>
       </body>
     </html>
   );

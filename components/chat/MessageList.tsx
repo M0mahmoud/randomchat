@@ -13,10 +13,14 @@ import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import useSound from "use-sound";
 
-export default function MessageList({ currentUser, roomId }: ChatProps) {
+export default function MessageList({
+  currentUser,
+  roomId,
+  isPrivateChat,
+}: ChatProps) {
   const endRef = useRef<HTMLDivElement | null>(null);
-  const onlineUsers = useOnlinePresence(currentUser?.uid! || "Guest");
-  const { messages } = useMessages(roomId);
+  const onlineUsers = useOnlinePresence(currentUser?.uid || "Guest");
+  const { messages } = useMessages(roomId, isPrivateChat);
 
   const [playMessageSound] = useSound("/msgSound.mp3", {
     volume: 0.5,
@@ -102,7 +106,7 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
                               Private Message
                             </Button>
                           </Link>
-                          <Button variant="outline" className="w-full">
+                          <Button variant="outline" className="w-full" disabled>
                             <UserPlus className="h-4 w-4" />
                           </Button>
                         </div>

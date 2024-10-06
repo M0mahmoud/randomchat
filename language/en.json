@@ -24,5 +24,12 @@
     "nickname_placeholder": "Enter your nickname",
     "submit_button": "Start Chatting",
     "submitting": "Submitting..."
+  },
+  "PrivateChat": {
+    "backToGlobalChat": "Back to Global Chat",
+    "typeMsgPlaceholder": "Type your message...",
+    "send": "Send",
+    "onlineStatus": "Online",
+    "offlineStatus": "Offline"
   }
 }

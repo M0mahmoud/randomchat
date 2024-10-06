@@ -13,4 +13,5 @@ export interface ChatProps {
   roomId: string;
   onLeaveChat?: () => void;
   isPublic?: boolean;
+  isPrivateChat: boolean;
 }
