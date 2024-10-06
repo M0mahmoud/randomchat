@@ -11,28 +11,30 @@ import { useEffect, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import useSound from 'use-sound';
+import useSound from "use-sound";
 
 export default function MessageList({ currentUser, roomId }: ChatProps) {
   const endRef = useRef<HTMLDivElement | null>(null);
-  const onlineUsers = useOnlinePresence(currentUser?.uid!);
+  const onlineUsers = useOnlinePresence(currentUser?.uid! || "Guest");
   const { messages } = useMessages(roomId);
-  
-  const [playMessageSound] = useSound('/msgSound.mp3', {
-    volume:0.5
+
+  const [playMessageSound] = useSound("/msgSound.mp3", {
+    volume: 0.5,
   });
 
   useEffect(() => {
     endRef?.current?.scrollIntoView({ behavior: "smooth" });
-    
     // Play sound when a new message is received
-    if (messages.length > 0 && messages[messages.length - 1].sender !== currentUser?.displayName) {
+    if (
+      messages.length > 0 &&
+      messages[messages.length - 1].sender !== currentUser?.displayName
+    ) {
       playMessageSound();
     }
-  }, [messages]);
+  }, [messages, currentUser?.displayName, playMessageSound]);
 
   return (
-    <ScrollArea className="flex-grow p-4">
+    <ScrollArea className="flex-grow p-4 bg-background">
       <div className="space-y-4">
         {messages.map((message, index) => {
           const isCurrentUser = message.sender === currentUser?.displayName;
@@ -48,7 +50,7 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
             >
               <div
                 className={cn(
-                  "flex items-end gap-2 ",
+                  "flex items-end gap-2",
                   isCurrentUser ? "flex-row-reverse" : "flex-row"
                 )}
               >
@@ -58,8 +60,8 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
                       <Avatar className="w-8 h-8 cursor-pointer relative overflow-visible">
                         <span
                           className={cn(
-                            "w-2 h-2  rounded-full ml-1 absolute -top-1 -translate-x-1/2 z-10",
-                            isOnline ? "bg-green-500" : "bg-red-500"
+                            "w-2 h-2 rounded-full ml-1 absolute -top-1 -translate-x-1/2 z-10",
+                            isOnline ? "bg-green-500" : "bg-destructive"
                           )}
                           aria-label={isOnline ? "Online" : "Offline"}
                         />
@@ -81,12 +83,14 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
                             {message.sender[0].toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <h3 className="font-semibold">{message.sender}</h3>
-                        <p className="text-sm text-gray-500 mb-2">
+                        <h3 className="font-semibold text-foreground">
+                          {message.sender}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-2">
                           <span
                             className={cn(
-                              "w-2 h-2  rounded-full me-1 inline-block",
-                              isOnline ? "bg-green-500" : "bg-red-500"
+                              "w-2 h-2 rounded-full me-1 inline-block",
+                              isOnline ? "bg-green-500" : "bg-destructive"
                             )}
                             aria-label={isOnline ? "Online" : "Offline"}
                           />
@@ -110,15 +114,17 @@ export default function MessageList({ currentUser, roomId }: ChatProps) {
                   className={cn(
                     "relative max-w-xs md:max-w-md px-3 py-2 rounded-lg",
                     isCurrentUser
-                      ? "bg-blue-500 text-white"
-                      : "bg-white text-gray-800"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground"
                   )}
                 >
                   <p className="text-base">{message.text}</p>
                   <p
                     className={cn(
                       "text-xs mt-0",
-                      isCurrentUser ? "text-blue-200" : "text-gray-500"
+                      isCurrentUser
+                        ? "text-primary-foreground/75"
+                        : "text-secondary-foreground/75"
                     )}
                   >
                     {timeFormat(new Date(message.timestamp))}

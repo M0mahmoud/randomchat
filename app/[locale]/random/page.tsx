@@ -120,7 +120,7 @@ export default function RandomChat() {
 
   return (
     <div className="flex flex-col h-dvh bg-gray-100">
-      <ChatHeader uid={currentUser?.uid!} />
+      <ChatHeader uid={currentUser?.uid! || "Guest"} />
       {isLoading ? (
         <Loading />
       ) : (

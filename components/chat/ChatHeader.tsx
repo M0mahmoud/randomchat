@@ -9,9 +9,9 @@ export default function ChatHeader({ uid }: { uid: string }) {
   const onlineUsers = useOnlinePresence(uid);
 
   return (
-    <header className="bg-white shadow-sm p-4 flex items-center justify-between">
+    <header className="bg-background border-b border-border p-4 flex items-center justify-between">
       <Link href="/">
-        <Button role="link" variant="secondary">
+        <Button role="link" variant="outline" size="icon">
           <ArrowLeft className="h-6 w-6 text-gray-600" />
         </Button>
       </Link>

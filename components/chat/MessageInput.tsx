@@ -18,34 +18,34 @@ export default function MessageInput({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    sendMessage(inputMessage, currentUser?.displayName!, currentUser?.uid!);
+    sendMessage(inputMessage, currentUser?.displayName! || "Guest", currentUser?.uid! || "Guest");
     setInputMessage("");
   };
 
   return (
-    <div className="p-4 bg-white">
-      <form onSubmit={handleSubmit} className="flex space-x-2">
-        {!isPublic && (
-          <Button onClick={onLeaveChat} variant="ghost" type="button">
-            <X className="h-4 w-4" />
-            <span className="sr-only">Leave Chat</span>
-          </Button>
-        )}
-        <Input
-          type="text"
-          placeholder="Type a message..."
-          required
-          value={inputMessage}
-          onChange={(e: { target: { value: SetStateAction<string> } }) =>
-            setInputMessage(e.target.value)
-          }
-          className="flex-grow"
-        />
-        <Button type="submit">
-          <Send className="h-4 w-4" />
-          <span className="sr-only">Send message</span>
-        </Button>
-      </form>
-    </div>
+    <div className="p-4 bg-background border-t border-border">
+  <form onSubmit={handleSubmit} className="flex space-x-2">
+    {!isPublic && (
+      <Button onClick={onLeaveChat} variant="ghost" type="button" className="text-muted-foreground hover:text-foreground">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Leave Chat</span>
+      </Button>
+    )}
+    <Input
+      type="text"
+      placeholder="Type a message..."
+      required
+      value={inputMessage}
+      onChange={(e: { target: { value: SetStateAction<string> } }) =>
+        setInputMessage(e.target.value)
+      }
+      className="flex-grow bg-background text-foreground"
+    />
+    <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
+      <Send className="h-4 w-4" />
+      <span className="sr-only">Send message</span>
+    </Button>
+  </form>
+</div>
   );
 }

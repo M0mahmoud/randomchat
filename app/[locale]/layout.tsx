@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { Tajawal } from "next/font/google";
 import "../globals.css";
+import { ThemeProvider } from "@/components/themeProvider";
 
 const tajawal = Tajawal({
   subsets: ["arabic", "latin"],
@@ -84,9 +85,15 @@ export default async function RootLayout({
         suppressHydrationWarning
         className={`${tajawal.className} antialiased`}
       >
+        <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem
+        >
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
